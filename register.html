@@ -45,7 +45,7 @@
         <br>
         <input type="text" id="input_country">
         <br>
-        <button>Register User</button>
+        <button onclick="registerProcess()">Register User</button>
     </section>
 
     <script>
@@ -60,19 +60,46 @@
             const pin = document.getElementById('input_pin').value;
             const birthdate = document.getElementById('input_birthdate').value;
             const country = document.getElementById('input_country').value;
+            const avatar = 1;
 
             if (name && lastname && age && age > 18 && email && password && password === confirmation && pin && pin.length == 6) {
                 if (verificationEmail(email)) {
-                    const response = await fetch(`http://localhost:3001/api/father`, {
+                    let bodySend = {
+                        "name": name,
+                        "lastname": lastname,
+                        "email": email,
+                        "password": password,
+                        "age": age, 
+                        "pin": pin, 
+                        "birthdate": birthdate, 
+                        "country": country, 
+                        "avatar": avatar
+                    };
+                    /*const response =*/ 
+                    await fetch(`http://localhost:3001/api/father/`, {
                         method: 'POST',
-                        body: { name, lastname, email, password, age, pin, birthdate, country }
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(bodySend)
+                    })
+                    .then(response => {
+                        console.log(response)
+                        response.json()
+                    }) 
+                    .then(data => {
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.log(error);
                     });
-                    let data = await response.text();
+
+                    /*let data = await response.text();
                     if (data.verification) {
                         console.log(data);
                     } else {
                         console.log('The email or passssword are incorrect');
-                    };
+                    };*/
                 } else {
                     console.log('El correo ya existe en la base de datos.')
                 }
@@ -82,7 +109,7 @@
         }
 
         async function verificationEmail(email) {
-            const response = await fetch(`http://localhost:3001/api/login/?email=${email}`, { method: 'GET' });
+            const response = await fetch(`http://localhost:3001/api/register/?email=${email}`, { method: 'GET' });
             let data = await response.text();
             return (data.verification)
         }
