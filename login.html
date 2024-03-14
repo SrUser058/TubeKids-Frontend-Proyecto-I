@@ -1,11 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
 </head>
+
 <body>
-    
+    <section id="login">
+        <h3>Login TubeKids</h3>
+        <br>
+        <label for="">Email</label>
+        <br>
+        <input type="text" id="input_email">
+        <br> <br>
+        <label for="">Password</label>
+        <br>
+        <input type="password" id="input_password">
+        <br>
+        <button id="button_login" onclick="loginAction()">Login</button>
+        <br>
+        <p>Don't have a account? <a href="./register.html">Register Now!</a></p>
+    </section>
+
+    <script>
+        async function loginAction() {
+            const email = document.getElementById('input_email').value;
+            const password = document.getElementById('input_password').value;
+            if (email && password) {
+
+                let response = await fetch(`http://localhost:3001/api/login/?email=${email}&password=${password}`, {
+                    method: 'GET'
+                });
+                let data = await response.text();
+
+
+                if (data.verification) {
+                    console.log(data);
+                } else {
+                    console.log('The email or passssword are incorrect');
+                }
+
+                /*await fetch(`http://localhost:3001/api/login/?email=${email}&password=${password}`, {
+                    method: 'GET'
+                })
+                    .then(response => {
+                        let data = response.text();
+                        
+                        if (!data.verification) {
+                            console.log('The email or passssword are incorrect');
+                        } else {
+                            console.log('Login sucess');
+                        }
+                    })*/
+            } else {
+                console.log('Data invalid');
+            }
+        }
+    </script>
 </body>
+
 </html>
