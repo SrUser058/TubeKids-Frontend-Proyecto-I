@@ -29,32 +29,26 @@
             const email = document.getElementById('input_email').value;
             const password = document.getElementById('input_password').value;
             if (email && password) {
-
-                let response = await fetch(`http://localhost:3001/api/login/?email=${email}&password=${password}`, {
-                    method: 'GET'
-                });
-                let data = await response.text();
-
-
-                if (data.verification) {
-                    console.log(data);
-                } else {
-                    console.log('The email or passssword are incorrect');
-                }
-
-                /*await fetch(`http://localhost:3001/api/login/?email=${email}&password=${password}`, {
-                    method: 'GET'
+                await fetch(`http://localhost:3001/api/login/?email=${email}&password=${password}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
                 })
-                    .then(response => {
-                        let data = response.text();
-                        
-                        if (!data.verification) {
-                            console.log('The email or passssword are incorrect');
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data.verification);
+                        if (data.verification == true) {
+                            //console.log('Login sucess');
+                            localStorage.setItem("currentUser", data.id);
+                            location.href = "http://localhost:5500/usersPage.html"
                         } else {
-                            console.log('Login sucess');
+                            console.log('The email or passssword are incorrect');
+                            alert('The email or password are wrong');
                         }
-                    })*/
+                    })
             } else {
+                alert('The email or password are avoid, please enter your email and password')
                 console.log('Data invalid');
             }
         }

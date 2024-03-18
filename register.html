@@ -63,55 +63,57 @@
             const avatar = 1;
 
             if (name && lastname && age && age > 18 && email && password && password === confirmation && pin && pin.length == 6) {
-                if (verificationEmail(email)) {
-                    let bodySend = {
-                        "name": name,
-                        "lastname": lastname,
-                        "email": email,
-                        "password": password,
-                        "age": age, 
-                        "pin": pin, 
-                        "birthdate": birthdate, 
-                        "country": country, 
-                        "avatar": avatar
-                    };
-                    /*const response =*/ 
-                    await fetch(`http://localhost:3001/api/father/`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(bodySend)
-                    })
-                    .then(response => {
-                        console.log(response)
-                        response.json()
-                    }) 
+                await fetch(`http://localhost:3001/api/register/?email=${email}`, { method: 'GET' })
+                    .then(response => response.json())
                     .then(data => {
-                        console.log(data);
-                    })
-                    .catch(error => {
-                        console.log(error);
+                        const veri = data.verification;
+                        if (veri == true) {
+                            let bodySend = {
+                                "name": name,
+                                "lastname": lastname,
+                                "email": email,
+                                "password": password,
+                                "age": age,
+                                "pin": pin,
+                                "birthdate": birthdate,
+                                "country": country,
+                                "avatar": avatar
+                            };
+                            registerUser(bodySend);
+                        } else {
+                            console.log('El correo ya existe en la base de datos.')
+                        }
                     });
-
-                    /*let data = await response.text();
-                    if (data.verification) {
-                        console.log(data);
-                    } else {
-                        console.log('The email or passssword are incorrect');
-                    };*/
-                } else {
-                    console.log('El correo ya existe en la base de datos.')
-                }
             } else {
-                console.log('Datos invalidos, por favor insertar bien los datos.')
+                console.log('Datos invalidos.');
+                alert('Wrong data in the field');
             }
         }
 
-        async function verificationEmail(email) {
-            const response = await fetch(`http://localhost:3001/api/register/?email=${email}`, { method: 'GET' });
-            let data = await response.text();
-            return (data.verification)
+        async function registerUser(bodySend) {
+            await fetch(`http://localhost:3001/api/father/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(bodySend)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        console.log("Error con la conexion");
+                        throw new Error("Error with the conection");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    //console.log(data); 
+                    alert('Register completed, you are gonna be transfer to the login page')
+                    location.href = "http://localhost:5500/login.html"
+                })
+                .catch(error => {
+                    console.log(error);
+                    alert('Error while saving your account, please try later')
+                });
         }
     </script>
 </body>
