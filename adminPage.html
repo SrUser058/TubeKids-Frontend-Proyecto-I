@@ -3,15 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <title>TubeKids - Administrador Page</title>
 </head>
+<script>
+    function navEditPlaylist(){
+        location.href = 'http://localhost:5500/editPlaylistPage.html';
+    }
+    function navEditUsers(){
+        location.href = 'http://localhost:5500/editUserPage.html';
+    }
+    function backPage(){
+        location.href = 'http://localhost:5500/usersPage.html';
+    }
+    function logOut(){
+        localStorage.clear();
+        location.href = 'http://localhost:5500/login.html';
+    }
+</script>
+
 <body>
     <section id="header">
-        
-        <button class="button_header">Editar Playlist</button>
-        <button class="button_header">Editar Usuarios</button>
-        <button class="button_header">Backt</button>
-        <button class="button_header">Log Out</button>
+        <button class="button_header" onclick="navEditPlaylist()">Editar Playlist</button>
+        <button class="button_header" onclick="navEditUsers()">Editar Usuarios</button>
+        <button class="button_header" onclick="backPage()">Backt</button>
+        <button class="button_header" onclick="logOut()">Log Out</button>
     </section>
+    <section></section>
+
 </body>
 </html>
