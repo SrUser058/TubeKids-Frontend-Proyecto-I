@@ -40,7 +40,7 @@
                         console.log(data.verification);
                         if (data.verification == true) {
                             //console.log('Login sucess');
-                            localStorage.setItem("currentUser", data.id);
+                            localStorage.setItem("currentUser", `${data.id}`);
                             location.href = "http://localhost:5500/usersPage.html"
                         } else {
                             console.log('The email or passssword are incorrect');
