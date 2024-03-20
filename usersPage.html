@@ -21,7 +21,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                if (data[0]) {
+                if (data.childs != 'void') {
                     data.forEach(element => {
                         console.log(element);
                             document.getElementById('user_list').innerHTML += `<div class="child_user">
