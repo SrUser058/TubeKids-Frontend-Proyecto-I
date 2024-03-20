@@ -3,7 +3,7 @@ body {
 }
 
 /* The Modal (background) */
-.modal_login {
+.modal_window {
     display: none;
     /* Hidden by default */
     position: fixed;
