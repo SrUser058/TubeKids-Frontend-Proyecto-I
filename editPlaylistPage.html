@@ -84,7 +84,7 @@
             "father": localStorage.getItem("currentUser")
         };
 
-        await fetch(`http://localhost:3001/api/playlist/`,
+        await fetch(`http://localhost:3001/api/playlists/`,
             {
                 method: 'POST',
                 headers: {
@@ -94,7 +94,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                if (data != undefined) {
+                if (data.errorSend != 422) {
                     location.href = 'http://localhost:5500/editPlaylistPage.html';
                 }
             })
