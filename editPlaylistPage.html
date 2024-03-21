@@ -47,7 +47,7 @@
                             <label> URL
                                 <input class="video_URL video_input ${element._id}" type="text" value="${element.URL}">
                             </label>
-                            <button value="${element._id}" class="child" onclick="deleteVideoAction(this.value)">Delete</button>
+                            <button value="${element._id}" class="video" onclick="deleteVideoAction(this.value)">Delete</button>
                             `;
                     });
                     document.getElementById("videos_list").innerHTML += `<h2>${data[0].name}</h2>
@@ -55,7 +55,7 @@
                     <input class="playlist_name playlist_input ${data[0]._id}" type="text" value="${data[0].name}"></label>
                     <div class="video_content">
                         ${videosList}
-                        <button value="${data[0]._id}" class="child" onclick="editVideoAction(this.value)">Update</button>                    
+                        <button value="${data[0]._id}" id="video_update" class="video" onclick="editVideoAction(this.value)">Update</button>                    
                     </div>`;
                     loadCreateVideo(data[0]._id);
                 };
@@ -156,6 +156,7 @@
         let videosList = [];
         const amountV = document.getElementsByClassName('video_input').length - 2;
         for (let x = 0; x <= amountV; x = x + 2) {
+
             let oldV = {
                 "name": document.getElementsByClassName('video_input')[x].value,
                 "URL": modifyURL(document.getElementsByClassName('video_input')[x + 1].value)
@@ -169,7 +170,52 @@
             "father": localStorage.getItem("currentUser")
         };
         //console.log(valueId);
-        await fetch(`http://localhost:3001/api/playlists/?id=${videoId}`,
+        await fetch(`http://localhost:3001/api/playlists/?id=${valueId}`,
+            {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(bodySended)
+            })
+            .then(response => response.json())
+            .then(data => {
+
+                if (data.result != 422) {
+                    location.href = 'http://localhost:5500/editPlaylistPage.html';
+                } else {
+                    alert('Error while loading the changes in the server');
+                    throw new Error("Something had wrong while update the playlist");
+                }
+            })
+            .catch(error => {
+                console.log(error);
+                alert('Error while loading the changes in the server');
+            });
+    }
+
+    async function deleteVideoAction(videoId) {
+
+        let videosList = [];
+        const valueId = document.getElementById('video_update').value;
+        const amountV = document.getElementsByClassName('video_input').length - 2;
+        for (let x = 0; x <= amountV; x = x + 2) {
+            if (document.getElementsByClassName('video_input')[x + 1].classList[2] != videoId) {
+                let oldV = {
+                    "name": document.getElementsByClassName('video_input')[x].value,
+                    "URL": modifyURL(document.getElementsByClassName('video_input')[x + 1].value)
+                };
+                videosList.push(oldV);
+            };
+        };
+        console.log(videosList);
+        const bodySended = {
+            name: document.getElementsByClassName('playlist_input')[0].value,
+            "videos": videosList,
+            "father": localStorage.getItem("currentUser")
+        };
+        //console.log(valueId);
+        await fetch(`http://localhost:3001/api/playlists/?id=${valueId}`,
             {
                 method: 'PATCH',
                 headers: {
@@ -190,10 +236,6 @@
                 console.log(error);
                 alert('Error while loading the changes in the server');
             });
-    }
-
-    async function deleteVideoAction(videoId) {
-
     }
 
     function modifyURL(url) {
